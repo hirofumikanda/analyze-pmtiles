@@ -20,7 +20,7 @@ PMTiles（Protomaps Tiles）は、地理空間タイルの現代的なアーカ�
 ### 1. リポジトリのクローン
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/hirofumikanda/analyze-pmtiles.git
 cd read-pmtiles
 ```
 
