@@ -23,7 +23,7 @@ def parse_bounds(bounds_str):
     except:
         return None
 
-def analyze_pmtiles(filename):
+def analyze_pmtiles(filename, include_zoom_analysis=False):
     """PMTilesファイルの詳細解析"""
     if not os.path.exists(filename):
         print(f"エラー: ファイル '{filename}' が見つかりません。")
@@ -120,8 +120,8 @@ def analyze_pmtiles(filename):
                             print(f"  - `{attr_name}` ({attr_type}): {attr_count:,}個の値, 範囲 {attr_min} - {attr_max}")
                     print()
             
-            # ズームレベル分析
-            if min_zoom is not None and max_zoom is not None:
+            # ズームレベル分析（オプション）
+            if include_zoom_analysis and min_zoom is not None and max_zoom is not None:
                 print("## ズームレベル分析")
                 print()
                 
@@ -214,12 +214,16 @@ def analyze_pmtiles(filename):
 
 if __name__ == "__main__":
     import sys
+    import argparse
     
-    if len(sys.argv) > 1:
-        fname = sys.argv[1]
-        analyze_pmtiles(fname)
-    else:
-        print(f"エラー: PMTilesファイルのパスを指定してください。")
-        print(f"使用方法: python {sys.argv[0]} <pmtiles_file_path>")
-        print(f"例: python {sys.argv[0]} dem_3857_contour.pmtiles")
+    parser = argparse.ArgumentParser(description='PMTilesファイルの詳細解析')
+    parser.add_argument('pmtiles_file', help='解析するPMTilesファイルのパス')
+    parser.add_argument('-z', '--zoom-analysis', action='store_true', 
+                       help='ズームレベル分析を実行（時間がかかる場合があります）')
+    
+    if len(sys.argv) == 1:
+        parser.print_help()
         sys.exit(1)
+    
+    args = parser.parse_args()
+    analyze_pmtiles(args.pmtiles_file, args.zoom_analysis)
